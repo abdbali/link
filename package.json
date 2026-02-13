@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.11.0",
+    "@auth/prisma-adapter": "1.4.2",
     "@prisma/client": "^6.3.1",
     "@uploadthing/react": "latest",
     "jose": "^5.9.6",
     "next": "^14.2.33",
-    "next-auth": "^5.0.0-beta.25",
+    "next-auth": "5.0.0-beta.27",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "resend": "^4.1.2",
