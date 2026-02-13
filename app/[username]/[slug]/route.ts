@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
-export const runtime = 'edge';
-
 export async function GET(_: Request, { params }: { params: { username: string; slug: string } }) {
   const link = await db.shortLink.findFirst({
     where: { owner: { username: params.username }, slug: params.slug }

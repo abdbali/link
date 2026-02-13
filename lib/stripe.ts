@@ -1,6 +1,5 @@
 import Stripe from 'stripe';
 import { env } from '@/lib/env';
 
-export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20'
-});
+// Stripe SDK kendi default API versiyonunu tip-güvenli biçimde kullanır.
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY);
