@@ -23,20 +23,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email) return null;
         const user = await db.user.findUnique({ where: { email: String(credentials.email) } });
-        return user;
+        if (!user) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        };
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.role = (user as { role?: string }).role ?? 'USER';
+      if (user?.role) {
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = (token.role as string) ?? 'USER';
+        session.user.role = token.role ?? 'USER';
       }
       return session;
     }
