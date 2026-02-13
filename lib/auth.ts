@@ -5,6 +5,12 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/lib/db';
 import { env } from '@/lib/env';
 
+type AppRole = 'USER' | 'ADMIN';
+
+function normalizeRole(value: unknown): AppRole {
+  return value === 'ADMIN' ? 'ADMIN' : 'USER';
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: 'jwt' },
@@ -29,21 +35,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role
+          role: normalizeRole(user.role)
         };
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user?.role) {
-        token.role = user.role;
+      if (user) {
+        token.role = normalizeRole((user as { role?: unknown }).role);
+      } else {
+        token.role = normalizeRole(token.role);
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role ?? 'USER';
+        session.user.role = normalizeRole(token.role);
       }
       return session;
     }
